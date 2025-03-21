@@ -1,0 +1,1 @@
+Per il tirocinio per l'Università di Ferrara, anno 2024/2025 sto creando un interfaccia per controllare un braccio rocotico MeArm e ottenere un feedbeck video da una Pi Cam collegata a una diversa RaspberryPi
