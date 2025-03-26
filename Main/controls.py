@@ -1,5 +1,4 @@
 from flask import Flask, render_template, Response, Blueprint
-import cv2
 
 bp =Blueprint('controls', __name__)
 
