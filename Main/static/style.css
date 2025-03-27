@@ -1,23 +1,92 @@
 body{
+    float: left;
+    width: 100%;
+    height: 80%;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: contain;
     background-color:#70706F;
-    }
-    
-    h1{
-        color:#3AAA35;
-        text-align:center;
-    }
-    
-    
-    .img-container{
-          width:50%;
-        border: 3px solid #3AAA35;
-        border-radius: 6px;
-        overflow: hidden; 
-        text-align:center;
-        margin-left: auto;
-        margin-right: auto;
-        padding:20px;
-    }
-    img{
-      width:100%;
-    }
+    position: absolute;
+}
+
+.joystick_zone_left{
+    float: left;
+    width: 20%;
+    height: 50%;
+    background-color: #5a5a5a;
+    margin-top: 12.5%;
+    margin-bottom: 12.5%;
+    padding: 0;
+    position:relative;
+}
+
+
+.joystick_zone_right{
+    float: right;
+    width: 20%;
+    height: 50%;
+    background-color: #5a5a5a;
+    margin-top: 12.5%;
+    margin-bottom: 12.5%;
+    padding: 0;
+    position:relative;
+}
+
+
+.middle_zone{   
+    float:left;
+    width:60%;
+    height:80%;
+    padding-top: 0;
+    margin:0;
+    margin-left:0px;
+    margin-right:0px;
+    -webkit-box-sizing: border-box;
+}
+
+
+.img_container{
+    width: 99.3%;
+    height: 95%;
+    border: 3px solid #3AAA35;
+    border-radius: 6px;
+    overflow: hidden; 
+    text-align:center;
+    margin-left: 0;
+    margin-right: 0;
+    padding:0;
+}
+img{
+width:100%;
+}
+
+
+.button_zone{
+    width: 100%;
+    height: 45%;
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    vertical-align: middle;
+    position:relative;
+}
+
+.buttonopen{
+    height: 30%;
+    width: 20%;
+    position: absolute;
+    top: 35%;
+    left: 15%;
+    background-color: #eaf5ea;
+    border-radius: 100%;
+}
+
+.buttonclose{
+    height: 30%;
+    width: 20%;
+    position: absolute;
+    top: 35%;
+    right: 15%;
+    background-color: #eaf5ea;
+    border-radius: 100%;
+}

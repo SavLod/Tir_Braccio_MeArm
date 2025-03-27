@@ -1,17 +1,28 @@
-{%extends 'base.html'%}
-
 {% block header %}
-  <h1>{% block title %}Joystick-View{% endblock %}</h1>
-{% endblock %}
+<title> Controlli MeArm - Joystick_Stream</title>
 
+{% endblock %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% block content %}
 <body>
     
-        <h1>PiCam Live Streaming</h1>
+        <h1>MeArm Controller</h1>
         
-        <div class="img-container">
-            <img src="http://10.17.49.18:8081//">
+        
+        <div id="joystick" class="joystick_zone_left"></div>
+
+        <div class="middle_zone">
+          <div id="imgcontainer", class = "img_container">
+            <img src="http://10.17.49.18:8081/">
+          </div>
+          <div id = "buttonzone", class = "button_zone">
+            <button type = 'button' class = 'buttonopen'>Open</button>
+            <button type = 'button' class = 'buttonclose'>Close</button>
+          </div> 
         </div>
+
+        <div id="joystick2" class="joystick_zone_right"></div>
         
 </body>
-
+{%endblock%}
 </html>
