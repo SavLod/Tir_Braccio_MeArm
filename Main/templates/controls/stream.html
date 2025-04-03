@@ -3,13 +3,15 @@
 
 {% endblock %}
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename = "joystick.js")}}"></script>
+  
 {% block content %}
 <body>
     
         <h1>MeArm Controller</h1>
         
         
-        <div id="joystick" class="joystick_zone_left"></div>
+        <div id="joystick_zone1" class="joystick_zone_left"></div>
 
         <div class="middle_zone">
           <div id="imgcontainer", class = "img_container">
@@ -21,8 +23,30 @@
           </div> 
         </div>
 
-        <div id="joystick2" class="joystick_zone_right"></div>
+        <div id="joystick_zone2" class="joystick_zone_right"></div>
         
+
+        <script type="text/javascript">
+
+
+          var Joy1 = new JoyStick('joystick_zone1');
+          var joy1IinputPosX = document.getElementById("joy1PosizioneX");
+          var joy1InputPosY = document.getElementById("joy1PosizioneY");
+          var joy1Direzione = document.getElementById("joy1Direzione");
+          var joy1X = document.getElementById("joy1X");
+          var joy1Y = document.getElementById("joy1Y");
+
+
+        
+
+        var Joy2 = new JoyStick('joystick_zone2');
+        var joy2IinputPosX = document.getElementById("joy2PosizioneX");
+        var joy2InputPosY = document.getElementById("joy2PosizioneY");
+        var joy2Direzione = document.getElementById("joy2Direzione");
+        var joy2X = document.getElementById("joy2X");
+        var joy2Y = document.getElementById("joy2Y");
+        </script>
+            
 </body>
 {%endblock%}
 </html>
