@@ -4,6 +4,7 @@
 {% endblock %}
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="{{ url_for('static', filename = "joystick.js")}}"></script>
+  <script src="{{ url_for('node_modules' , filename = "/mqtt/dist/mqtt.js")}}"></script>
   
 {% block content %}
 <body>
@@ -28,6 +29,12 @@
 
         <script type="text/javascript">
 
+          let client = mqtt.connect('mqtt://x91aff1f.ala.eu-central-1.emqxsl.com:8883',{
+            username: 'Edoardo',
+            password: 'Edoardo'
+          });
+        
+          client.publish('testtopic/1', 'Hello World');
 
           var Joy1 = new JoyStick('joystick_zone1');
           var joy1IinputPosX = document.getElementById("joy1PosizioneX");
@@ -35,16 +42,15 @@
           var joy1Direzione = document.getElementById("joy1Direzione");
           var joy1X = document.getElementById("joy1X");
           var joy1Y = document.getElementById("joy1Y");
+       
 
-
+          var Joy2 = new JoyStick('joystick_zone2');
+          var joy2IinputPosX = document.getElementById("joy2PosizioneX");
+          var joy2InputPosY = document.getElementById("joy2PosizioneY");
+          var joy2Direzione = document.getElementById("joy2Direzione");
+          var joy2X = document.getElementById("joy2X");
+          var joy2Y = document.getElementById("joy2Y");
         
-
-        var Joy2 = new JoyStick('joystick_zone2');
-        var joy2IinputPosX = document.getElementById("joy2PosizioneX");
-        var joy2InputPosY = document.getElementById("joy2PosizioneY");
-        var joy2Direzione = document.getElementById("joy2Direzione");
-        var joy2X = document.getElementById("joy2X");
-        var joy2Y = document.getElementById("joy2Y");
         </script>
             
 </body>
