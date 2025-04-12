@@ -3,8 +3,10 @@
 
 {% endblock %}
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="{{ url_for('static', filename = "joystick.js")}}"></script>
-  <script src="{{ url_for('node_modules' , filename = "/mqtt/dist/mqtt.js")}}"></script>
+  <script src="{{ url_for('static', filename='joystick.js') }}"></script>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+  
   
 {% block content %}
 <body>
@@ -29,12 +31,7 @@
 
         <script type="text/javascript">
 
-          let client = mqtt.connect('mqtt://x91aff1f.ala.eu-central-1.emqxsl.com:8883',{
-            username: 'Edoardo',
-            password: 'Edoardo'
-          });
-        
-          client.publish('testtopic/1', 'Hello World');
+          
 
           var Joy1 = new JoyStick('joystick_zone1');
           var joy1IinputPosX = document.getElementById("joy1PosizioneX");
@@ -50,7 +47,34 @@
           var joy2Direzione = document.getElementById("joy2Direzione");
           var joy2X = document.getElementById("joy2X");
           var joy2Y = document.getElementById("joy2Y");
-        
+          
+
+          let client = mqtt.connect('wss://x91aff1f.ala.eu-central-1.emqxsl.com:8084/mqtt',{
+          username: 'Edoardo',
+          password: 'Edoardo',
+          clientId: 'Joystick_stream',
+          reconnectPeriod: 1000
+          });
+
+          client.on('connect', () => {
+          console.log('Connected to MQTT broker');
+          client.subscribe('testtopic/1');
+          client.publish('testtopic/1', 'Connesso a testtopic, client id: Joystick_stream');
+
+          window.addEventListener('load', () => {
+            console.log('pagina caricata completamente');
+            client.publish('testtopic/1', 'Pagina caricata compeltamente, inizio trasmissione')
+            
+            setInterval(() => {
+              client.publish('testtopic/1', 'Posizione Joystick1, x :' + joy1X + ' y :' + joy1Y + ' Direzione: ' + joy1Direzione);
+              client.publish('testtopic/1', 'Posizione Joystick2, x :' + joy2X + ' y :' + joy2Y + ' Direzione: ' + joy2Direzione);
+            }, 5000); 
+            
+          });
+        });
+
+          
+          
         </script>
             
 </body>
