@@ -66,8 +66,8 @@
             client.publish('testtopic/1', 'Pagina caricata compeltamente, inizio trasmissione')
             
             setInterval(() => {
-              client.publish('testtopic/1', 'Posizione Joystick1, x :' + joy1X + ' y :' + joy1Y + ' Direzione: ' + joy1Direzione);
-              client.publish('testtopic/1', 'Posizione Joystick2, x :' + joy2X + ' y :' + joy2Y + ' Direzione: ' + joy2Direzione);
+              client.publish('testtopic/1', 'Posizione Joystick1, x :' + Joy1.GetX() + ' y :' + Joy1.GetY() + ' Direzione: ' + Joy1.GetDir());
+              client.publish('testtopic/1', 'Posizione Joystick2, x :' + Joy2.GetX() + ' y :' + Joy2.GetY() + ' Direzione: ' + Joy2.GetDir());
             }, 5000); 
             
           });

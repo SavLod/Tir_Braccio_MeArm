@@ -221,7 +221,7 @@ var JoyStick = (function(container)
     function onMouseUp(event) 
     {
         pressed = 0;
-        // Se richiesto reset della poazione 
+        // Se richiesto reset della posizione 
         if(autoReturnToCenter)
         {
             movedX = centerX;
