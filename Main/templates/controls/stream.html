@@ -21,8 +21,8 @@
             <img src="http://10.17.49.18:8081/">
           </div>
           <div id = "buttonzone", class = "button_zone">
-            <button type = 'button' class = 'buttonopen'>Open</button>
-            <button type = 'button' class = 'buttonclose'>Close</button>
+            <button type = 'button' class = 'buttonopen' onclick = 'send_open()'>Open</button>
+            <button type = 'button' class = 'buttonclose' onclick = 'send_close()'>Close</button>
           </div> 
         </div>
 
@@ -56,6 +56,8 @@
           reconnectPeriod: 1000
           });
 
+          
+
           client.on('connect', () => {
           console.log('Connected to MQTT broker');
           client.subscribe('testtopic/1');
@@ -73,7 +75,12 @@
           });
         });
 
-          
+        function send_open(){
+          client.publish('testtopic/1', 'open');
+        };
+        function send_close(){
+          client.publish('testtopic/1', 'close');
+        };
           
         </script>
             
