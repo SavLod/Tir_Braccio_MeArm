@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 
 WORKDIR /Tirocinio
@@ -13,4 +13,4 @@ COPY . .
 EXPOSE 5000
 
 ENV FLASK_APP=run.py
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["python", "run.py", "--host=0.0.0.0"]

@@ -5,7 +5,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="{{ url_for('static', filename='joystick.js') }}"></script>
   <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-
   
   
 {% block content %}
@@ -18,7 +17,7 @@
 
         <div class="middle_zone">
           <div id="imgcontainer", class = "img_container">
-            <img src="http://10.17.49.18:8081/">
+            <img src="http://192.168.178.66:8081/">
           </div>
           <div id = "buttonzone", class = "button_zone">
             <button type = 'button' class = 'buttonopen' onclick = 'send_open()'>Open</button>
@@ -49,10 +48,8 @@
           var joy2Y = document.getElementById("joy2Y");
           
 
-          let client = mqtt.connect('wss://x91aff1f.ala.eu-central-1.emqxsl.com:8084/mqtt',{
-          username: 'Edoardo',
-          password: 'Edoardo',
-          clientId: 'Joystick_stream',
+          let client = mqtt.connect('wss://broker.emqx.io:8084/mqtt',{
+          clientId: 'mearm_Joystick_controls',
           reconnectPeriod: 1000
           });
 
@@ -60,30 +57,49 @@
 
           client.on('connect', () => {
           console.log('Connected to MQTT broker');
-          client.subscribe('testtopic/1');
-          client.publish('testtopic/1', 'Connesso a testtopic, client id: Joystick_stream');
+          
+          client.publish('me_arm/tesi/debug', 'Connesso a testtopic, client id: mearm_Joystick_controls');
 
           window.addEventListener('load', () => {
             console.log('pagina caricata completamente');
-            client.publish('testtopic/1', 'Pagina caricata compeltamente, inizio trasmissione')
+            client.publish('me_arm/tesi/debug', 'Pagina caricata compeltamente, inizio trasmissione')
             
             setInterval(() => {
-              client.publish('testtopic/1', 'Posizione Joystick1, x :' + Joy1.GetX() + ' y :' + Joy1.GetY() + ' Direzione: ' + Joy1.GetDir());
-              client.publish('testtopic/1', 'Posizione Joystick2, x :' + Joy2.GetX() + ' y :' + Joy2.GetY() + ' Direzione: ' + Joy2.GetDir());
-            }, 5000); 
+
+              client.publish('me_arm/tesi/raw_controls',JSON.stringify({
+                joystick1:{
+                  x: Joy1.GetX(),
+                  y: Joy1.GetY(),
+                  direzione: Joy1.GetDir()
+                },
+                joystick2:{
+                  x: Joy2.GetX(),
+                  y: Joy2.GetY(),
+                  direzione: Joy2.GetDir()
+                }
+              }));
+              
+            }, 1000); 
             
           });
         });
 
         function send_open(){
-          client.publish('testtopic/1', 'open');
-        };
+          client.publish('me_arm/tesi/raw_controls',JSON.stringify({
+                hand: open
+          }));
+        }; 
+          
         function send_close(){
-          client.publish('testtopic/1', 'close');
-        };
+          client.publish('me_arm/tesi/raw_controls',JSON.stringify({
+                hand: close
+          }));
+        }; 
           
         </script>
             
 </body>
 {%endblock%}
 </html>
+
+

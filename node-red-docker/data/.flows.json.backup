@@ -1,0 +1,217 @@
+[
+    {
+        "id": "e91c87e660f5aff7",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4dd8b5c636be2521",
+        "type": "global-config",
+        "name": "global-config",
+        "env": [
+            {
+                "name": "x1",
+                "value": "",
+                "type": "num"
+            },
+            {
+                "name": "x2",
+                "value": "",
+                "type": "num"
+            },
+            {
+                "name": "y1",
+                "value": "",
+                "type": "num"
+            },
+            {
+                "name": "y2",
+                "value": "",
+                "type": "num"
+            },
+            {
+                "name": "hand",
+                "value": "",
+                "type": "num"
+            }
+        ]
+    },
+    {
+        "id": "786747a6b76656bd",
+        "type": "mqtt-broker",
+        "name": "Data_Node_input",
+        "broker": "broker.emqx.io",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "me_arm/tesi/debug",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "Connesso a MQTT broker, client id: Node_Red_Input",
+        "birthMsg": {},
+        "closeTopic": "me_arm/tesi/debug",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "Fine trasmissione, disconnessione, client id: Node_Red_Input",
+        "closeMsg": {},
+        "willTopic": "me_arm/tesi/debug",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "Connessione interrotta inaspettatamente, chiiusura comunicazione, client id: Node_Red_Input",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c7fa19f7a3463071",
+        "type": "mqtt-broker",
+        "name": "Data_Node_Output",
+        "broker": "broker.emqx.io",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "me_arm/tesi/debug",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "Connesso a MQTT broker, client id: Node_Red_Output",
+        "birthMsg": {},
+        "closeTopic": "me_arm/tesi/debug",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "Fine trasmissione, disconnessione, client id: Node_Red_Output",
+        "closeMsg": {},
+        "willTopic": "me_arm/tesi/debug",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "Connessione interrotta inaspettatamente, chiusura connessione, client id: Node_Red_Output",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b33cc6d000661c2e",
+        "type": "mqtt in",
+        "z": "e91c87e660f5aff7",
+        "name": "",
+        "topic": "me_arm/tesi/raw_controls",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "786747a6b76656bd",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 400,
+        "wires": [
+            [
+                "8ba12fcd8c06443b"
+            ]
+        ]
+    },
+    {
+        "id": "392318b334b63613",
+        "type": "mqtt out",
+        "z": "e91c87e660f5aff7",
+        "name": "",
+        "topic": "me_arm/tesi/ready_controls",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c7fa19f7a3463071",
+        "x": 1120,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "8ba12fcd8c06443b",
+        "type": "function",
+        "z": "e91c87e660f5aff7",
+        "name": "function 1",
+        "func": "\nfunction clamp(value, min, max) {\n    return Math.max(min, Math.min(max, value));\n}\n\n//chiusura e apertura gripper\nif (msg.payload.hasOwnProperty(\"hand\")) {\n    var hand_tmp = global.get(\"hand\") || 0;\n\n    if (msg.payload.hand === \"open\") {\n        hand_tmp += 0.2;\n    } else {\n        hand_tmp -= 0.2;\n    }\n\n    hand_tmp = clamp(hand_tmp, -1, 1);\n    global.set(\"hand\", hand_tmp);\n\n    return msg;\n}\n\n//Lettura valori joystick\nvar x1_val = msg.payload.joystick1.x;\nvar x2_val = msg.payload.joystick2.x;\nvar y1_val = msg.payload.joystick1.y;\nvar y2_val = msg.payload.joystick2.y;\n\n// Helper: adjust and clamp global variable\nfunction adjustAndClamp(val, key) {\n    let current = global.get(key) || 0;\n\n    if (val > -10 && val < 10) {\n        return clamp(current, -1, 1);\n    } else {\n        return clamp(current + (val / 180), -1, 1);\n    }\n}\n\n// Adjust and clamp each axis\nlet x1_tmp = adjustAndClamp(x1_val, \"x1\");\nlet x2_tmp = adjustAndClamp(x2_val, \"x2\");\nlet y1_tmp = adjustAndClamp(y1_val, \"y1\");\nlet y2_tmp = adjustAndClamp(y2_val, \"y2\");\n\n// Store updated values\nglobal.set(\"x1\", x1_tmp);\nglobal.set(\"x2\", x2_tmp);\nglobal.set(\"y1\", y1_tmp);\nglobal.set(\"y2\", y2_tmp);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nglobal.set(\"x1\", 0);\nglobal.set(\"x2\", 0);\nglobal.set(\"y1\", 0);\nglobal.set(\"y2\", 0);",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 400,
+        "wires": [
+            [
+                "dda7a45f8997ca32",
+                "63a7ac2132df3b66"
+            ]
+        ]
+    },
+    {
+        "id": "dda7a45f8997ca32",
+        "type": "function",
+        "z": "e91c87e660f5aff7",
+        "name": "function 2",
+        "func": "var string = {\n    base:     global.get(\"x1\"),\n    gripper:  global.get(\"hand\"),\n    elbow:    global.get(\"y1\"),\n    shoulder: global.get(\"y2\")     \n};\n\nmsg.payload = JSON.stringify(string);\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 400,
+        "wires": [
+            [
+                "392318b334b63613",
+                "ba3743b2bed97cd8"
+            ]
+        ]
+    },
+    {
+        "id": "63a7ac2132df3b66",
+        "type": "debug",
+        "z": "e91c87e660f5aff7",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "ba3743b2bed97cd8",
+        "type": "debug",
+        "z": "e91c87e660f5aff7",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 240,
+        "wires": []
+    }
+]
