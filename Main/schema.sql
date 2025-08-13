@@ -5,6 +5,6 @@ CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT,
   password TEXT,
-  privilegies INTEGER,
+  is_admin BOOLEAN,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

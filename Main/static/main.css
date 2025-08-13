@@ -1,21 +1,24 @@
 body{ 
-    background-color:#70706F;
+    background-color:slategray;
     }
 
     h1{
       text-align: center;
     }
     
-    .img-container{
-          width:60%;
-        border: 3px solid #3AAA35;
-        border-radius: 6px;
-        overflow: hidden; 
-        text-align:center;
-        margin-left: auto;
-        margin-right: auto;
-        padding:20px;
+ 
+
+    .buttonauth{
+    background-color: beige;
+    color:black
     }
-    img{
-      width:100%;
+
+    .buittonadmin{
+        background-color: red;
+        color:black
+    }
+
+    .buttonstream{
+        background-color: slateblue;
+        color :black
     }

@@ -56,9 +56,9 @@
           
 
           client.on('connect', () => {
-          console.log('Connected to MQTT broker');
+          console.log('Connected to MQTT broker, client id:' + client.options.clientId);
           
-          client.publish('me_arm/tesi/debug', 'Connesso a testtopic, client id: mearm_Joystick_controls');
+          client.publish('me_arm/tesi/debug', 'Connesso a broker, client id:' + client.options.clientId);
 
           window.addEventListener('load', () => {
             console.log('pagina caricata completamente');
@@ -86,13 +86,13 @@
 
         function send_open(){
           client.publish('me_arm/tesi/raw_controls',JSON.stringify({
-                hand: open
+                hand: "open"
           }));
         }; 
           
         function send_close(){
           client.publish('me_arm/tesi/raw_controls',JSON.stringify({
-                hand: close
+                hand: "close"
           }));
         }; 
           

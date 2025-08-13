@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<title> Controlli MeArm - Welcome</title>
+<h1>{% block title %}Welcome{% endblock %}</h1>
+{% endblock %}
+
+
+{% block content %}
+<body>
+    <h1>Welcome to the MeArm Control Panel</h1>
+    {% if user %}
+        <p>Hello{% if user %}, {{ user.username }}{% endif %}!</p>
+    {% else %}
+        <p>Please register or log in to continue.</p>
+    {% endif %}
+
+    <button class = "buttonauth" onclick="window.location.href='{{ url_for('auth.register') }}'">Register</button>
+    <button class = "buttonauth" onclick="window.location.href='{{ url_for('auth.login') }}'">Login</button>
+    <button class = "buttonstream" onclick="window.location.href='{{ url_for('controls.stream') }}'">Controls</button>
+
+    {% if is_admin %}
+        <button classs = "buttonadmin" onclick="window.location.href='{{ url_for('auth.admin_panel') }}'">Admin Panel</button>
+    {% endif %}
+
+    {% if user %}
+        <br><br>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    {% endif %}
+
+</body>
+</html>
+{%endblock%}

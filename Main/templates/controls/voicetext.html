@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Live Speech to Text</h2>
+<button id="recordButton">Start Recording</button>
+<p id="result">Waiting for speech...</p>
+
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script src="{{ url_for('static', filename='transcribe.js') }}"></script>
+{% endblock %}

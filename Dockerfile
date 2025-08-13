@@ -5,6 +5,11 @@ WORKDIR /Tirocinio
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && apt-get install -y ffmpeg
+RUN pip install openai-whisper
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+RUN python -c "import whisper; whisper.load_model('base')"
+
 
 # Copy app
 COPY . .
