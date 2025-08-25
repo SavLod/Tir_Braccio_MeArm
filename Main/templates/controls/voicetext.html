@@ -1,8 +1,18 @@
-{% extends 'base.html' %}
+{% block header %}
+<title> Controlli MeArm - Speech-To-Text</title>
+{% endblock %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 {% block content %}
 <h2>Live Speech to Text</h2>
+
+<div class="middle_zone">
+    <div id="imgcontainer", class = "img_container">
+        <img src="http://192.168.178.66:8081/">
+    </div>
+</div>
+
 <button id="recordButton">Start Recording</button>
-<p id="result">Waiting for speech...</p>
+<p id="result">Recorded voice: </p>
 
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 <script src="{{ url_for('static', filename='transcribe.js') }}"></script>

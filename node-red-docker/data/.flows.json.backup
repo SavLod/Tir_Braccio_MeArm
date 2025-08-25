@@ -45,7 +45,7 @@
         "name": "Data_Node_input",
         "broker": "broker.emqx.io",
         "port": 1883,
-        "clientid": "",
+        "clientid": "Node_Red Joystick input",
         "autoConnect": true,
         "usetls": false,
         "protocolVersion": 4,
@@ -55,17 +55,17 @@
         "birthTopic": "me_arm/tesi/debug",
         "birthQos": "0",
         "birthRetain": "false",
-        "birthPayload": "Connesso a MQTT broker, client id: Node_Red_Input",
+        "birthPayload": "Connesso a MQTT broker, client id: Node_Red Joystick input",
         "birthMsg": {},
         "closeTopic": "me_arm/tesi/debug",
         "closeQos": "0",
         "closeRetain": "false",
-        "closePayload": "Fine trasmissione, disconnessione, client id: Node_Red_Input",
+        "closePayload": "Fine trasmissione, disconnessione, client id: Node_Red Joystick input",
         "closeMsg": {},
         "willTopic": "me_arm/tesi/debug",
         "willQos": "0",
         "willRetain": "false",
-        "willPayload": "Connessione interrotta inaspettatamente, chiiusura comunicazione, client id: Node_Red_Input",
+        "willPayload": "Connessione interrotta inaspettatamente, chiiusura comunicazione, client id: Node_Red Joystick input",
         "willMsg": {},
         "userProps": "",
         "sessionExpiry": ""
@@ -102,6 +102,37 @@
         "sessionExpiry": ""
     },
     {
+        "id": "022ce618b114d408",
+        "type": "mqtt-broker",
+        "name": "Data Speech input",
+        "broker": "broker.emqx.io",
+        "port": 1883,
+        "clientid": "node_red speech-to-text input",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "me_arm/tesi/debug ",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "Connesso a MQTT broker, client id: Node_Red Speech-to-Text input",
+        "birthMsg": {},
+        "closeTopic": "me_arm/tesi/debug ",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "Fine trasmissione, disconnessione, client id: Node_Red Speech-to-Text input",
+        "closeMsg": {},
+        "willTopic": "me_arm/tesi/debug ",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "Connessione interrotta inaspettatamente, chiiusura comunicazione, client id: Node_Red Speech-to-Text input",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
         "id": "b33cc6d000661c2e",
         "type": "mqtt in",
         "z": "e91c87e660f5aff7",
@@ -114,11 +145,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 170,
-        "y": 400,
+        "x": 110,
+        "y": 380,
         "wires": [
             [
-                "8ba12fcd8c06443b"
+                "de0e27929131c771"
             ]
         ]
     },
@@ -136,28 +167,28 @@
         "correl": "",
         "expiry": "",
         "broker": "c7fa19f7a3463071",
-        "x": 1120,
-        "y": 400,
+        "x": 1280,
+        "y": 320,
         "wires": []
     },
     {
         "id": "8ba12fcd8c06443b",
         "type": "function",
         "z": "e91c87e660f5aff7",
-        "name": "function 1",
-        "func": "\nfunction clamp(value, min, max) {\n    return Math.max(min, Math.min(max, value));\n}\n\n//chiusura e apertura gripper\nif (msg.payload.hasOwnProperty(\"hand\")) {\n    var hand_tmp = global.get(\"hand\") || 0;\n\n    if (msg.payload.hand === \"open\") {\n        hand_tmp += 0.2;\n    } else {\n        hand_tmp -= 0.2;\n    }\n\n    hand_tmp = clamp(hand_tmp, -1, 1);\n    global.set(\"hand\", hand_tmp);\n\n    return msg;\n}\n\n//Lettura valori joystick\nvar x1_val = msg.payload.joystick1.x;\nvar x2_val = msg.payload.joystick2.x;\nvar y1_val = msg.payload.joystick1.y;\nvar y2_val = msg.payload.joystick2.y;\n\n// Helper: adjust and clamp global variable\nfunction adjustAndClamp(val, key) {\n    let current = global.get(key) || 0;\n\n    if (val > -10 && val < 10) {\n        return clamp(current, -1, 1);\n    } else {\n        return clamp(current + (val / 180), -1, 1);\n    }\n}\n\n// Adjust and clamp each axis\nlet x1_tmp = adjustAndClamp(x1_val, \"x1\");\nlet x2_tmp = adjustAndClamp(x2_val, \"x2\");\nlet y1_tmp = adjustAndClamp(y1_val, \"y1\");\nlet y2_tmp = adjustAndClamp(y2_val, \"y2\");\n\n// Store updated values\nglobal.set(\"x1\", x1_tmp);\nglobal.set(\"x2\", x2_tmp);\nglobal.set(\"y1\", y1_tmp);\nglobal.set(\"y2\", y2_tmp);\n\nreturn msg;",
+        "name": "Filtro valori Joystick",
+        "func": "\nfunction clamp(value, min, max) {\n    return Math.max(min, Math.min(max, value));\n}\n\n//chiusura e apertura gripper\nif (msg.payload.hasOwnProperty(\"hand\")) {\n    var hand_tmp = global.get(\"hand\") || 0;\n\n    if (msg.payload.hand === \"open\") {\n        hand_tmp -= 0.2;\n    } else {\n        hand_tmp += 0.2;\n    }\n\n    hand_tmp = clamp(hand_tmp, -1, 1);\n    global.set(\"hand\", hand_tmp);\n\n    return msg;\n}\n\n//Lettura valori joystick\nvar x1_val = - msg.payload.joystick1.x;\nvar x2_val = msg.payload.joystick2.x;\nvar y1_val = msg.payload.joystick1.y;\nvar y2_val = msg.payload.joystick2.y;\n\n// Helper: adjust and clamp global variable\nfunction adjustAndClamp(val, key) {\n    let current = global.get(key) || 0;\n\n    if (val > -10 && val < 10) {\n        return clamp(current, -1, 1);\n    } else {\n        return clamp(current + (val / 180), -1, 1);\n    }\n}\n\n// Adjust and clamp each axis\nlet x1_tmp = adjustAndClamp(x1_val, \"x1\");\nlet x2_tmp = adjustAndClamp(x2_val, \"x2\");\nlet y1_tmp = adjustAndClamp(y1_val, \"y1\");\nlet y2_tmp = adjustAndClamp(y2_val, \"y2\");\n\n// Store updated values\nglobal.set(\"x1\", x1_tmp);\nglobal.set(\"x2\", x2_tmp);\nglobal.set(\"y1\", y1_tmp);\nglobal.set(\"y2\", y2_tmp);\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nglobal.set(\"x1\", 0);\nglobal.set(\"x2\", 0);\nglobal.set(\"y1\", 0);\nglobal.set(\"y2\", 0);",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nglobal.set(\"x1\", 0);\nglobal.set(\"x2\", 0);\nglobal.set(\"y1\", 0);\nglobal.set(\"y2\", 0);\nglobal.set(\"hand\", 0)",
         "finalize": "",
         "libs": [],
-        "x": 440,
-        "y": 400,
+        "x": 650,
+        "y": 520,
         "wires": [
             [
-                "dda7a45f8997ca32",
-                "63a7ac2132df3b66"
+                "63a7ac2132df3b66",
+                "dda7a45f8997ca32"
             ]
         ]
     },
@@ -165,16 +196,16 @@
         "id": "dda7a45f8997ca32",
         "type": "function",
         "z": "e91c87e660f5aff7",
-        "name": "function 2",
-        "func": "var string = {\n    base:     global.get(\"x1\"),\n    gripper:  global.get(\"hand\"),\n    elbow:    global.get(\"y1\"),\n    shoulder: global.get(\"y2\")     \n};\n\nmsg.payload = JSON.stringify(string);\nreturn msg;\n",
+        "name": "Preparazione messagio JSON ",
+        "func": "var string = {\n    base:     global.get(\"x1\"),\n    gripper:  global.get(\"hand\"),\n    elbow:    global.get(\"y1\"),\n    shoulder: global.get(\"y2\"),\n    speed: \"N/D\"  \n};\n\nmsg.payload = JSON.stringify(string);\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 760,
-        "y": 400,
+        "x": 950,
+        "y": 320,
         "wires": [
             [
                 "392318b334b63613",
@@ -194,8 +225,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 640,
-        "y": 240,
+        "x": 880,
+        "y": 660,
         "wires": []
     },
     {
@@ -210,8 +241,111 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
-        "y": 240,
+        "x": 1200,
+        "y": 700,
         "wires": []
+    },
+    {
+        "id": "1dd64ad0e55fbf98",
+        "type": "mqtt in",
+        "z": "e91c87e660f5aff7",
+        "name": "",
+        "topic": "me_arm/tesi/voice_controls",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "022ce618b114d408",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "b8594f90ff207f06"
+            ]
+        ]
+    },
+    {
+        "id": "b8594f90ff207f06",
+        "type": "function",
+        "z": "e91c87e660f5aff7",
+        "name": "Gestione valori speech-to-text",
+        "func": "let word = msg.payload.voice.toLowerCase(); \n\nfunction clamp(value, min, max) {\n    return Math.max(min, Math.min(max, value));\n}\n\nfunction set(key, val) {\n    let current = global.get(key) || 0;\n    \n    clamp(current + (0.2 * val) , -1, 1);\n    global.set(key, current); \n}\n\nswitch (word) {\n    case \"avanti\":\n        set(\"y1\", 1);\n        break\n\n    case \"indietro\":\n        set(\"y1\", -1)\n        break;\n\n    case \"sinistra\":\n        set(\"x1\", -1)\n        break;\n\n    case \"destra\":\n        set(\"x1\", 1)\n        break;\n\n    case \"apri\":\n        set(\"hand\", 1)\n        break;\n\n    case \"chiudi\":\n        set(\"hand\", -1)\n        break;\n\n    case \"alto\":\n        set(\"y2\", 1)\n        break;\n\n    case \"basso\":\n        set(\"y2\", -1)\n        break;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 180,
+        "wires": [
+            [
+                "dda7a45f8997ca32",
+                "2ce52acd625f9b7a"
+            ]
+        ]
+    },
+    {
+        "id": "2ce52acd625f9b7a",
+        "type": "debug",
+        "z": "e91c87e660f5aff7",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "de0e27929131c771",
+        "type": "function",
+        "z": "e91c87e660f5aff7",
+        "name": "Divisione movimento",
+        "func": "let steps = 4;        // divisione in 4 movimenti (modificabile)\nlet interval = 250;   // divisione del tempo per permettere 4 movimenti\n\nlet outputs = [];\n\nif (msg.payload.hasOwnProperty(\"hand\")) {\n    msg.delay = 0;\n    return msg;\n}\n\nfor (let i = 0; i < steps; i++) {\n    let msgClone = RED.util.cloneMessage(msg);\n\n    // Divido il movimento in parti uguali\n    msgClone.payload.x = msg.payload.joystick1.x / steps;\n    msgClone.payload.x = msg.payload.joystick1.y / steps;\n    msgClone.payload.x = msg.payload.joystick2.x / steps;\n    msgClone.payload.x = msg.payload.joystick2.y / steps;\n    \n    // Aggiungo delay ad uso del corrispettivo nodo\n    msgClone.delay = i * interval;\n\n    outputs.push(msgClone);\n}\n\nreturn [outputs];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 520,
+        "wires": [
+            [
+                "b088b4d597ab5d0c"
+            ]
+        ]
+    },
+    {
+        "id": "b088b4d597ab5d0c",
+        "type": "delay",
+        "z": "e91c87e660f5aff7",
+        "name": "",
+        "pauseType": "delayv",
+        "timeout": "0.25",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 480,
+        "y": 520,
+        "wires": [
+            [
+                "8ba12fcd8c06443b"
+            ]
+        ]
     }
 ]

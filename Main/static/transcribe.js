@@ -25,7 +25,7 @@ document.getElementById('recordButton').addEventListener('click', async () => {
         mediaRecorder.ondataavailable = async (event) => {
             if (event.data.size > 0) {
                 const formData = new FormData();
-                formData.append('audio', event.data, 'chunk.wav');
+                formData.append('audio', event.data, 'chunk.webm');
 
                 try {
                     const response = await fetch('/transcribe_audio', {
@@ -40,7 +40,7 @@ document.getElementById('recordButton').addEventListener('click', async () => {
                         // Pubblica ogni parola sul canale MQTT
                         result.text.trim().split(/\s+/).forEach(word => {
                             const message = { voice: word };
-                            client.publish('me_arm/tesi/raw_controls', JSON.stringify(message));
+                            client.publish('me_arm/tesi/voice_controls', JSON.stringify(message));
                         });
 
                         // Mostra nella pagina 

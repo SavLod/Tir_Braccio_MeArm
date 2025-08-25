@@ -17,18 +17,31 @@ def stream():
 
     return render_template('controls/stream.html')
 
-@bp.route('/transcribe_audio', methods =['POST'])
+@bp.route('/transcribe_audio', methods=['POST'])
 def transcribe_audio():
-        
     audio_file = request.files["audio"]
-    audio_bytes = io.BytesIO(audio_file.read())
-    
-    with tempfile.NamedTemporaryFile(suffix= "wav") as f:
-        f.write(audio_bytes.read())
-        f.seek(0)
-        result = model.transcribe(f.name)
-    
-    return jsonify({'text': result['text']})
+
+ 
+    audio_bytes = audio_file.read()
+
+    import tempfile
+    with tempfile.NamedTemporaryFile(suffix=".webm") as f:
+        f.write(audio_bytes)
+        f.flush()
+        audio = whisper.load_audio(f.name)
+
+
+    audio = whisper.pad_or_trim(audio)
+
+
+    mel = whisper.log_mel_spectrogram(audio).to(model.device)
+
+
+    options = whisper.DecodingOptions(language="it")
+    result = whisper.decode(model, mel, options)
+
+    return jsonify({'text': result.text})
+
 
 @bp.route('/voicetext')
 def transcribe():
